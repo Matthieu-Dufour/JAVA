@@ -26,7 +26,7 @@ public class SandwichRepresentation {
     }
     
     @GetMapping("/categories/{id}/sandwichs")
-    public ResponseEntity<?> getProjetByIntervenantId(@PathVariable("id") String id)
+    public ResponseEntity<?> getSandwichByCategorieId(@PathVariable("id") String id)
             throws NotFound {
         
         if (!ir.existsById(id)) {
@@ -48,7 +48,7 @@ public class SandwichRepresentation {
     }
     
     @PutMapping("/categories/{categorieId}/sandwichs/{sandwichId}")
-    public ResponseEntity<?> updateProjet(@PathVariable("categorieId") String categorieId,
+    public ResponseEntity<?> updateSandwich(@PathVariable("categorieId") String categorieId,
             @PathVariable("sandwichId") String sandwichId,
             @RequestBody Sandwich sandwichUpdated) {
         

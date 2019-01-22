@@ -77,7 +77,7 @@ public class CategorieRepresentation {
     }
 
     @GetMapping("/{id}/sandwichs")
-    public ResponseEntity<?> getSandwichByIntervenantId(@PathVariable("id") String id)
+    public ResponseEntity<?> getSandwichByCategorieId(@PathVariable("id") String id)
             throws NotFound {
         if (!ir.existsById(id)) {
             throw new NotFound("Categorie inexistant");
