@@ -1,0 +1,8 @@
+org\lpro\intervenantprojet\boundary\ProjetResource.class
+org\lpro\intervenantprojet\boundary\IntervenantRepresentation.class
+org\lpro\intervenantprojet\boundary\ProjetRepresentation.class
+org\lpro\intervenantprojet\entity\Projet.class
+org\lpro\intervenantprojet\exception\NotFound.class
+org\lpro\intervenantprojet\entity\Intervenant.class
+org\lpro\intervenantprojet\boundary\IntervenantResource.class
+org\lpro\intervenantprojet\ProjetApplication.class

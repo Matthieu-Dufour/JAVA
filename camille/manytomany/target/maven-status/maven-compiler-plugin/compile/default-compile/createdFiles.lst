@@ -1,0 +1,7 @@
+org\lpro\entity\Projet.class
+org\lpro\boundary\ProjetRepository.class
+org\lpro\boundary\IntervenantRepository.class
+org\lpro\boundary\IntervenantRepresentation.class
+org\lpro\boundary\ProjetRepresentation.class
+org\lpro\entity\Intervenant.class
+org\lpro\ManyToManyApp.class
