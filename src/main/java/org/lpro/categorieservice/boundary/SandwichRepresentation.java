@@ -1,80 +1,67 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package org.lpro.categorieservice.boundary;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
 import java.util.UUID;
-import org.lpro.categorieservice.entity.Sandwich;
-import org.lpro.categorieservice.exception.NotFound;
+
+import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.lpro.categorieservice.entity.Sandwich;
+import org.lpro.categorieservice.exception.NotFound;
+
+/**
+ *
+ * @author dufour76u
+ */
 @RestController
 public class SandwichRepresentation {
-    
-    private final SandwichResource pr;
-    private final CategorieResource ir;
+	private final SandwichResource sr;
+	private final CategoryResource cr;
 
-    // Injection de dépendances
-    public SandwichRepresentation(SandwichResource pr, CategorieResource ir) {
-        this.pr = pr;
-        this.ir = ir;
-    }
-    
-    @GetMapping("/categories/{id}/sandwichs")
-    public ResponseEntity<?> getSandwichByCategorieId(@PathVariable("id") String id)
-            throws NotFound {
-        
-        if (!ir.existsById(id)) {
-            throw new NotFound("Categorie inexistant");
-        }
-        return new ResponseEntity<>(pr.findByCategorieId(id), HttpStatus.OK);
-    }
-  
-    @PostMapping("/categories/{id}/sandwichs")
+	public SandwichRepresentation(SandwichResource sr, CategoryResource cr) {
+		this.sr = sr;
+		this.cr = cr;
+	}
+	
+	  @GetMapping("/categories/{id}/sandwiches")
+	    public ResponseEntity<?> getSandwichByCategoryId(@PathVariable("id") String id)
+	            throws NotFound {
+	        
+	        if (!cr.existsById(id)) {
+	            throw new NotFound("Categorie inexistante");
+	        }
+	        return new ResponseEntity<>(sr.findByCategoryId(id), HttpStatus.OK);
+	    }
+
+	
+    @PostMapping("/categories/{id}/sandwiches")
     public ResponseEntity<?> ajoutSandwich(@PathVariable("id") String id,
             @RequestBody Sandwich sandwich) throws NotFound {
-        return ir.findById(id)
-                .map(categorie -> {
+        return cr.findById(id)
+                .map(category -> {
                     sandwich.setId(UUID.randomUUID().toString());
-                    sandwich.setCategorie(categorie);
-                    pr.save(sandwich);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-                }).orElseThrow ( () -> new NotFound("Categorie inexistant"));
+                    sandwich.setCategory(category);
+                    Sandwich saved = sr.save(sandwich);
+                    HttpHeaders responseHeaders = new HttpHeaders();
+                    responseHeaders.setLocation(linkTo(SandwichRepresentation.class).slash(saved.getId()).toUri());
+                    return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
+                }).orElseThrow ( () -> new NotFound("Categorie inexistante"));
     }
-    
-    @PutMapping("/categories/{categorieId}/sandwichs/{sandwichId}")
-    public ResponseEntity<?> updateSandwich(@PathVariable("categorieId") String categorieId,
-            @PathVariable("sandwichId") String sandwichId,
-            @RequestBody Sandwich sandwichUpdated) {
-        
-        if (!ir.existsById(categorieId)) {
-            throw new NotFound("Categorie inexistant");
-        }
-        return pr.findById(sandwichId)
-                .map(sandwich -> {
-                    sandwichUpdated.setId(sandwich.getId());
-                    pr.save(sandwichUpdated);
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                }).orElseThrow(() -> new NotFound("Sandwich inexistant"));
-    }
-     
-    @DeleteMapping("/categories/{categorieId}/sandwichs/{sandwichId}")
-    public ResponseEntity<?> deleteSandiwch(@PathVariable("categorieId") String categorieId,
-            @PathVariable("sandwichId") String sandwichId) {
-        
-        if (!ir.existsById(categorieId)) {
-            throw new NotFound("Categorie inexistant");
-        }
-        return pr.findById(sandwichId)
-                .map(sandwich -> {
-                    pr.delete(sandwich);
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                }).orElseThrow(() -> new NotFound("Sandwich inexistant"));
-    }
-    
+
 }

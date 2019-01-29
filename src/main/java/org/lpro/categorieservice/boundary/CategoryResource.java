@@ -6,15 +6,12 @@
 
 package org.lpro.categorieservice.boundary;
 
-import java.util.List;
-
 import org.springframework.data.repository.CrudRepository;
 
-import org.lpro.categorieservice.entity.Sandwich;
+import org.lpro.categorieservice.entity.Category;
 /**
  *
  * @author dufour76u
  */
-public interface SandwichResource extends CrudRepository<Sandwich,String> {
-	List<Sandwich> findByCategoryId(String categoryId);
+public interface CategoryResource extends CrudRepository<Category,String> {
 }
